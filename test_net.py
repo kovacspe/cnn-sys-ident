@@ -31,6 +31,17 @@ PATIENCE = 5
 LR_DECAY_STEPS = 2
 LOG_DIR = 'analysis/iclr2019/checkpoints-repro-new'
 
+log_hash = {   # determines the seed of the random number generator
+    8:  '8d2912ce0669f4dcc4efa78b970e453c',
+    12: '4d2e43901a1be496a5e66dc9fec1ed14',
+    16: '647bb1d1bd02979996e492b5422eb95f',
+    20: '6babf3b3be2cbd8da50e091966f22e46',
+    24: '1e34d6f792b506630897ce84fe93a58c',
+    28: 'a653720bdd962f95b213156f25c80f31',
+    32: 'd23dd9d3a7149ecc72627115bb940e1e',
+    40: 'ba65e73469fe90109f22e8204557b646',
+    48: '37e70606daaa0b2ca13698fee329eec4'}
+
 conv_smooth_weight = {
     8:  0.00781004, 12: 0.00184694, 16: 0.0249692,
     20: 0.0257738,  24: 0.00146371, 28: 0.0186784,
@@ -49,8 +60,9 @@ data = Dataset.load(DATA_FILE)
 
 num_features = 16
 base = BaseModel(
-   data,
-    log_dir=LOG_DIR
+    data,
+    log_dir=LOG_DIR,
+    log_hash=log_hash[num_features]
 )
 core = StackedRotEquiHermiteConv2dCore(
     base,
@@ -85,4 +97,4 @@ iter_num, val_loss, test_corr = trainer.fit(
     patience=PATIENCE,
     lr_decay_steps=LR_DECAY_STEPS)
 
-trainer.compute_test_corr()
+print('corr: ',trainer.compute_test_corr())
